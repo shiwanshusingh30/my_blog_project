@@ -11,7 +11,7 @@ Route::get('/update/{slug}',[BlogController::class,'updatepage'])->name('update'
 Route::post('/updatepage/{slug}',[BlogController::class,'updateblog'])->name('updateblog');
 Route::get('/delete/{slug}',[BlogController::class,'deleteblog'])->name('delete');
 Route::get('/bloggrid',[BlogController::class,'bloggrid'])->name('blog.grid');
-Route::get('/create',function(){
-    return view('blogcreate');
-})->name('blog.create');
 
+
+Route::get('/dashboard', [BlogController::class, 'blogcount'])
+    ->name('dashboard');
