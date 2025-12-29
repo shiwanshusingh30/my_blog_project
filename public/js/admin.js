@@ -18,13 +18,11 @@ const usersBtn = document.getElementById('usersBtn');
 const usersSection = document.getElementById('usersSection');
 const menuLinks = document.querySelectorAll('.menu-link');
 
-
 // menu active handling
 function setActiveMenu(clickedItem) {
     menuLinks.forEach(link => link.classList.remove('active'));
     clickedItem.classList.add('active');
 }
-
 
 //aside responsive
 menuBtn.addEventListener('click', () => {
@@ -39,9 +37,8 @@ document.getElementById("postbtn").addEventListener("click", function (e) {
     e.preventDefault();
     setActiveMenu(this);
 
-
     if (submenu.style.display === "block") {
-        submenu.style.display = "none";
+          submenu.style.display = "none";
     } else {
         submenu.style.display = "block";
     }
@@ -53,13 +50,10 @@ postBtn.addEventListener('click', function (e) {
 
     insights.style.display = "none";
     recentOrders.style.display = "none";
-
-
     postForm.style.display = 'block';
     blogListSection.style.display = "none"
     usersSection.style.display = "none";
     chartjs.style.display = 'none';
-
     mainHeading.style.display = 'none';
     dateDiv.style.display = 'none';
 
@@ -68,7 +62,6 @@ postBtn.addEventListener('click', function (e) {
 dashboardBtn.addEventListener('click', function (e) {
     e.preventDefault();
     setActiveMenu(this);
-
     insights.style.display = "grid";
     mainHeading.style.display = 'block';
     dateDiv.style.display = 'inline-block';
@@ -83,8 +76,6 @@ dashboardBtn.addEventListener('click', function (e) {
 blogListBtn.addEventListener('click', function (e) {
     e.preventDefault();
     setActiveMenu(this);
-
-
     insights.style.display = "none";
     recentOrders.style.display = "none";
     postForm.style.display = "none";
@@ -100,8 +91,6 @@ blogListBtn.addEventListener('click', function (e) {
 usersBtn.addEventListener('click', function (e) {
     e.preventDefault();
     setActiveMenu(this);
-
-
     insights.style.display = "none";
     recentOrders.style.display = "none";
     postForm.style.display = "none";
@@ -117,8 +106,6 @@ usersBtn.addEventListener('click', function (e) {
 insightsbtn.addEventListener('click', function (e) {
     e.preventDefault();
     setActiveMenu(this);
-
-
     insights.style.display = "none";
     recentOrders.style.display = "none";
     postForm.style.display = "none";
@@ -130,8 +117,6 @@ insightsbtn.addEventListener('click', function (e) {
 
 });
 // chart js
-
-
 const categoryChart = new Chart(ctx, {
     type: 'bar',
     data: {

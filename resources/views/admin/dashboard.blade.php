@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     
 
-
 </head>
 
 <body>
@@ -71,10 +70,14 @@
                     <h3>Settings</h3>
                 </a>
 
-                <a href="#" class="menu-link">
-                    <span><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
-                    <h3>Log Out</h3>
-                </a>
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+                    <button type="submit" class="menu-link logout-btn">
+                        <span><i class="fa-solid fa-right-from-bracket"></i></span>
+                        <h3>Logout</h3>
+                    </button>
+                </form>
+
 
 
             </div>
@@ -188,55 +191,57 @@
                 </table>
             </div>
             <!-- Add Blog Form -->
-            <div id="postForm" class="post-form-wrapper" style="display:none;">
+           <div id="postForm" class="post-form-wrapper" style="display:none;">
+        
+            <h1>ADD Blog</h1>
+        
+            <form action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+        
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" value="{{ old('title') }}">
+                    @error('title') <small class="error">{{ $message }}</small> @enderror
+                </div>
+        
+                <div class="form-group">
+                    <label>Image</label>
+                    <input type="file" name="image">
+                    <small class="hint">Upload featured image</small>
+                </div>
+        
+                <div class="form-group">
+                    <label>Author</label>
+                    
+                    <input type="text" value="{{ Auth::user()->name }}" disabled>
+                    <input type="hidden" name="author" value="{{ Auth::user()->name }}">
+                </div>
+        
+                <div class="form-group">
+                    <label>Content</label>
+                    <textarea name="contents" rows="6">{{ old('contents') }}</textarea>
+                    @error('contents') <small class="error">{{ $message }}</small> @enderror
+                </div>
+        
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category">
+                        <option value="">Select Category</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Education">Education</option>
+                        <option value="Kids">Kids</option>
+                        <option value="Health">Health</option>
+                        <option value="Biography">Biography</option>
+                    </select>
+                    @error('category') <small class="error">{{ $message }}</small> @enderror
+                </div>
+        
+                <button type="submit" class="btn-primary-custom">Add Blog</button>
+            </form>
+           </div>
 
-                 <h1>ADD Blog</h1>
-                  
-                <form action="{{ route('blog.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" name="title" value="{{ old('title') }}">
-                        @error('title') <small class="error">{{ $message }}</small> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Image</label>
-                        <input type="file" name="image">
-                        <small class="hint">Upload featured image</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Author</label>
-                        <input type="text" name="author" value="{{ old('author') }}">
-                        @error('author') <small class="error">{{ $message }}</small> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Content</label>
-                        <textarea name="contents" rows="6">{{ old('contents') }}</textarea>
-                        @error('contents') <small class="error">{{ $message }}</small> @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select name="category">
-                            <option value="">Select Category</option>
-                            <option value="Technology">Technology</option>
-                            <option value="Travel">Travel</option>
-                            <option value="Lifestyle">Lifestyle</option>
-                            <option value="Education">Education</option>
-                            <option value="Kids">Kids</option>
-                            <option value="Health">Health</option>
-                            <option value="Biography">Biography</option>
-                        </select>
-                        @error('category') <small class="error">{{ $message }}</small> @enderror
-                    </div>
-
-                    <button type="submit" class="btn-primary-custom">Add Blog</button>
-                </form>
-            </div>
             <!-- BLOG LIST TABLE  -->
             <div id="blogListSection" style="display:none;" class="recent_order">
                 <h1>All Blogs</h1>
@@ -281,6 +286,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                
             </div>
             <!-- chart -->
             <div class="insights-chart" style="display:none;" id="chartjs">
@@ -327,10 +333,14 @@
                 <div class="profile">
 
                     <div class="info">
-                        <p><b>Shiwanshu</b></p>
-                        <p>Admin</p>
-                        <small class="text-muted"></small>
+                        @if(Auth::check())
+                            <p><b>{{ Auth::user()->name }}</b></p>
+                            <p>Admin</p>
+                        @else
+                            <p><b>Guest</b></p>
+                        @endif
                     </div>
+
                     <div class="profile-photo">
                         <img src="" alt="">
                     </div>
@@ -362,9 +372,7 @@
 
 
         </div>
-
         <!-- right div end -->
-
     </div>
     <script>
         window.categoryData = {
@@ -372,7 +380,7 @@
             counts: @json($categoryCounts)
         };
     </script>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ asset('js/admin.js') }}"></script>
 

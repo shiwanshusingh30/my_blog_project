@@ -1,80 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-</head>
-<body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-7 col-md-9">
-    
-                <div class="card shadow-sm border-0" style="background:#e8f0ff; border-radius:12px;">
-                    <div class="card-body p-4">
-    
-                        <h3 class="text-center mb-4 fw-bold">Edit Blog</h3>
-    
-                        <form action="{{ route('updateblog', $blogs->slug) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-    
-                            {{-- Title --}}
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Title</label>
-                                <input type="text" name="title" value="{{ $blogs->title }}"
-                                    class="form-control bg-light border-primary @error('title') is-invalid @enderror">
-                                @error('title') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-    
-                           
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Author</label>
-                                <input type="text" name="author" value="{{ $blogs->author }}"
-                                    class="form-control bg-light border-primary @error('author') is-invalid @enderror">
-                                @error('author') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-    
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Content</label>
-                                <textarea name="contents" rows="6"
-                                    class="form-control bg-light border-primary @error('contents') is-invalid @enderror">{{ $blogs->contents }}</textarea>
-                                @error('contents') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-    
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Category</label>
-                                
-                                <select name="category"
-                                 class="form-control bg-light border-primary>
-                                    <option value="">Select Category</option>
-                                    <option value="Technology" {{ old('category', $blogs->category) == 'Technology' ? 'selected' : '' }}>Technology
-                                    </option>
-                                    <option value="Travel" {{ old('category', $blogs->category) == 'Travel' ? 'selected' : '' }}>Travel</option>
-                                    <option value="Lifestyle" {{ old('category', $blogs->category) == 'Lifestyle' ? 'selected' : '' }}>Lifestyle</option>
-                                    <option value="Education" {{ old('category', $blogs->category) == 'Education' ? 'selected' : '' }}>Education</option>
-                                    <option value="Kids" {{ old('category', $blogs->category) == 'Kids' ? 'selected' : '' }}>Kids</option>
-                                    <option value="Health" {{ old('category', $blogs->category) == 'Health' ? 'selected' : '' }}>Health</option>
-                                    <option value="Biography" {{ old('category', $blogs->category) == 'Biography' ? 'selected' : '' }}>Biography</option>
-                                </select>
+    <title>Edit Blog</title>
 
-                                @error('category') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-    
-                            <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" style="transition: 0.2s;"
-                                onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                                Update Blog
-                            </button>
-                        </form>
-    
-                    </div>
-                </div>
-    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input[disabled] {
+            background: #f1f1f1;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .error {
+            color: #e63946;
+            font-size: 13px;
+            margin-top: 4px;
+            display: block;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: #1e4fd6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Edit Blog</h1>
+
+        <form action="{{ route('updateblog', $blogs->slug) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+
+
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" value="{{ old('title', $blogs->title) }}">
+                @error('title') <span class="error">{{ $message }}</span> @enderror
             </div>
-        </div>
+
+
+            <div class="form-group">
+
+                <label>Author</label>
+                <input type="text" value="{{ Auth::user()->name }}" disabled>
+                <input type="hidden" name="author" value="{{ Auth::user()->name }}">
+            </div>
+
+
+            <div class="form-group">
+                <label>Content</label>
+                <textarea name="contents" rows="6">{{ old('contents', $blogs->contents) }}</textarea>
+                @error('contents') <span class="error">{{ $message }}</span> @enderror
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category">
+                    <option value="">Select Category</option>
+
+                    <option value="Technology" {{ old('category', $blogs->category) == 'Technology' ? 'selected' : '' }}>
+                        Technology
+                    </option>
+
+                    <option value="Travel" {{ old('category', $blogs->category) == 'Travel' ? 'selected' : '' }}>
+                        Travel
+                    </option>
+
+                    <option value="Lifestyle" {{ old('category', $blogs->category) == 'Lifestyle' ? 'selected' : '' }}>
+                        Lifestyle
+                    </option>
+
+                    <option value="Education" {{ old('category', $blogs->category) == 'Education' ? 'selected' : '' }}>
+                        Education
+                    </option>
+
+                    <option value="Kids" {{ old('category', $blogs->category) == 'Kids' ? 'selected' : '' }}>
+                        Kids
+                    </option>
+
+                    <option value="Health" {{ old('category', $blogs->category) == 'Health' ? 'selected' : '' }}>
+                        Health
+                    </option>
+
+                    <option value="Biography" {{ old('category', $blogs->category) == 'Biography' ? 'selected' : '' }}>
+                        Biography
+                    </option>
+
+                </select>
+
+                @error('category')
+                    <span class="error">{{ $message }}</span>
+                @enderror
+            </div>
+
+
+          
+            <button type="submit">Update Blog</button>
+        </form>
     </div>
+
 </body>
+
 </html>

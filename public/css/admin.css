@@ -750,35 +750,49 @@ main table tbody tr:last-child td {
     color: #555;
 }
 
-/* pagination */
-.pagination-wrapper {
+/* Logout button reset */
+.logout-form {
+    margin: 0;
+}
+
+.logout-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
     display: flex;
-    justify-content: center; /* centers the pagination */
-    margin-top: 20px;
+    align-items: center;
+    margin-top: 3rem;
+    gap: 1rem;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    color: var(--clr-dark);
+    transition: all 0.3s ease;
 }
 
-.pagination-wrapper ul {
-    display: flex;
-    gap: 5px;
-    list-style: none;
-    padding: 0;
+
+.logout-btn i {
+    color: #d9534f;
+    font-size: 1.2rem;
 }
 
-.pagination-wrapper li {
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+
+.logout-btn h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
 }
 
-.pagination-wrapper li.active {
-    background-color: #006669;
-    color: white;
+
+.logout-btn:hover {
+    background-color: rgba(217, 83, 79, 0.1);
+    color: #d9534f;
 }
 
-.pagination-wrapper li.disabled {
-    color: #aaa;
-    cursor: not-allowed;
+
+.logout-btn:focus {
+    outline: none;
 }
+
+
 
 
 
@@ -917,4 +931,82 @@ main table tbody tr:last-child td {
         position: absolute;
         left: 1rem;
     }
+
+    /* latest form added */
+      #postForm,
+    #blogListSection,
+    #chartjs,
+    #usersSection {
+        width: 100%;
+        margin: 20px auto;
+        padding: 16px;
+        box-sizing: border-box;
+    }
+    
+    .post-form-wrapper {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .post-form-wrapper h1 {
+        font-size: 18px;
+        margin-bottom: 16px;
+        text-align: center;
+    }
+
+    .post-form-wrapper input,
+    .post-form-wrapper textarea,
+    .post-form-wrapper select {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .btn-primary-custom {
+        font-size: 14px;
+        padding: 12px;
+    }
+      #blogListSection {
+        overflow-x: auto;
+    }
+
+    #blogListSection table {
+        min-width: 520px;
+    }
+
+    #blogListSection h1 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .insights-chart {
+        background: #fff;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+    }
+
+    .insights-chart h1 {
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .insights-chart canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    #usersSection {
+        overflow-x: auto;
+    }
+
+    #usersSection table {
+        min-width: 420px;
+    }
+
+    #usersSection h1 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
 }

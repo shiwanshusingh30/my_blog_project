@@ -5,23 +5,22 @@ use App\Models\blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class BlogController extends Controller
 {
    // home page
    public function viewblog()
    {
-      $blogs = Blog::orderBy('created_at', 'desc')->get();
+      $blogs = Blog::inRandomOrder()->get();
 
-      $latest = Blog::latest()->take(3)->get();
+      $latest = Blog::latest()->take(2)->get();
 
-      // ADD THIS LINE
-  
+      
+
 
       return view('home', compact('blogs', 'latest'));
    }
-
-
    //   create blog
    public function createblog(Request $request)
    {
@@ -29,21 +28,18 @@ class BlogController extends Controller
          'title' => 'required|string|min:5|max:50',
          'contents' => 'required|string|min:100|max:1000',
          'category' => 'required|string',
-         'author' => 'required|string|min:3|max:25',
-         'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
+         'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:3072',
       ]);
 
-      $imagepath = null;
-      if ($request->hasFile('image')) {
-         $imagepath = $request->file('image')->store('photos', 'public');
-      }
+      $imagepath = $request->file('image')->store('photos', 'public');
+
 
       Blog::create([
          'title' => $request->title,
-         'slug' => Str::slug($request->title),
+         'slug' => Str::slug($request->title,'-'),
          'contents' => $request->contents,
          'image' => $imagepath,
-         'author' => $request->author,
+         'author' => Auth::user()->name,
          'category' => $request->category,
       ]);
 
@@ -52,12 +48,10 @@ class BlogController extends Controller
          ->with('success', 'Blog added successfully');
 
    }
-
    //  single view page
    public function showblog($slug)
    {
 
-     
       $blog = blog::where('slug', $slug)->firstOrFail();
       $related = Blog::where('category', $blog->category)
          ->where('slug', '!=', $blog->slug)
@@ -66,7 +60,7 @@ class BlogController extends Controller
          ->get();
 
 
-      return view('singleblog', compact('blog','related'));
+      return view('singleblog', compact('blog', 'related'));
    }
    // update page
    public function updatepage($slug)
@@ -79,23 +73,22 @@ class BlogController extends Controller
    // update blog
    public function updateblog(request $request, $slug)
    {
-       $request->validate([
+      $request->validate([
          'title' => 'required|string|min:5|max:50',
          'contents' => 'required|string|min:100|max:1000',
          'category' => 'required|string',
-         'author' => 'required|string|min:3|max:20',
-         'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072', 
+         'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:3072',
       ]);
 
-       blog::where('slug', $slug)->update([
+      blog::where('slug', $slug)->update([
          'title' => $request->title,
          'slug' => str::slug($request->title, '-'),
          'contents' => $request->contents,
-         'author' => $request->author,
+         'author' => Auth::user()->name,
          'category' => $request->category,
       ]);
 
-      return redirect()->route('home');
+      return redirect()->route('dashboard');
 
    }
    // delete
@@ -107,19 +100,20 @@ class BlogController extends Controller
          return redirect()->route('dashboard');
       }
    }
-//   blog grid page
-   public function bloggrid(){
-      $blogs=blog::orderBy('created_at','desc')->paginate(8);
-      return view('bloggrid',compact('blogs'));
+   //   blog grid page
+   public function bloggrid()
+   {
+      $blogs = blog::latest()->paginate(8);
+      return view('bloggrid', compact('blogs'));
    }
-// dashboard
+   // dashboard
    public function blogcount()
    {
       $count = Blog::count();
       $lastMonthCount = Blog::where('created_at', '>=', now()->subMonth())->count();
       $thisWeekCount = Blog::where('created_at', '>=', now()->startOfWeek())->count();
-      $latest = Blog::latest()->take(6)->get();
-      $latests = Blog::latest()->paginate(10); 
+      $latest = Blog::latest()->take(4)->get();
+      $latests = Blog::latest()->take(8)->get();
 
       $recentUpdatedBlogs = Blog::orderBy('title', 'desc')->take(6)->get();
 
@@ -128,10 +122,10 @@ class BlogController extends Controller
          ->groupBy('category')
          ->get();
 
-      $categoryNames = $categoryData->pluck('category'); 
+      $categoryNames = $categoryData->pluck('category');
       $categoryCounts = $categoryData->pluck('total');
 
-   // user table
+      // user table
       $users = Blog::select(
          'author',
          DB::raw('COUNT(*) as total_blogs'),
@@ -154,8 +148,5 @@ class BlogController extends Controller
          'users'
       ));
    }
-
-
-
 }
 
